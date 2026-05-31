@@ -3,7 +3,9 @@ const express = require('express')
 const router = express.Router()
 
 const peliculasModel = require('../models/peliculasModel')
+const {verificarToken} = require('../middleware/authMiddleware')
 
+//Metodo Get de http para consultar
 router.get('/', (req, res) => {
     
     peliculasModel.obtenerPeliculas((error, resultados) => {
@@ -17,8 +19,8 @@ router.get('/', (req, res) => {
     })
 });
 
-//Metodo post para crear
-router.post('/', (req, res) => {
+//Metodo Post para crear
+router.post('/', verificarToken, (req, res) => {
     const pelicula = req.body;
     
     peliculasModel.crearPeliculas(pelicula, (error, resultados) =>{
@@ -34,11 +36,11 @@ router.post('/', (req, res) => {
     })
 });
 
+//Metodo Put de http para actualizar
+
 router.put('/:id', (req, res) => {
     const id = parseInt(req.params.id)
     
-    
-
     const peliculas = req.body
 
     peliculasModel.actualizarPeliculas(id,peliculas, (error, resultado) => {
@@ -58,7 +60,8 @@ router.put('/:id', (req, res) => {
     })
 })
 
-router.delete('/:id',(req, res) => {
+//Metodo Delete http para eliminar
+router.delete('/:id',verificarToken, (req, res) => {
     const id = parseInt(req.params.id)
     
     peliculasModel.eliminarPeliculas(id, (error, resultado) => {
